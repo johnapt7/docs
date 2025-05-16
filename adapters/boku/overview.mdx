@@ -1,0 +1,108 @@
+---
+title: Boku Adapter Overview
+description: Learn about the Boku payment adapter integration
+icon: mobile
+---
+
+# Boku Adapter
+
+The Boku Adapter enables mobile payment processing through carrier billing and direct mobile payments across global networks.
+
+## Key Features
+
+- **Carrier Billing**: Direct billing to mobile phone accounts
+- **Global Coverage**: Support for 65+ countries
+- **One-Click Payments**: Simplified mobile checkout
+- **Real-time Processing**: Instant payment confirmations
+
+## Supported Operations
+
+<CardGroup cols={2}>
+  <Card title="Purchase" icon="shopping-cart" href="/adapters/boku/flows#purchase">
+    One-time and recurring mobile payments
+  </Card>
+  <Card title="Upgrade" icon="arrow-up" href="/adapters/boku/flows#upgrade">
+    Service tier upgrades
+  </Card>
+  <Card title="Downgrade" icon="arrow-down" href="/adapters/boku/flows#downgrade">
+    Service tier downgrades
+  </Card>
+  <Card title="Cancel" icon="xmark" href="/adapters/boku/flows#cancel">
+    Subscription cancellations
+  </Card>
+</CardGroup>
+
+## Getting Started
+
+### Prerequisites
+
+Before integrating the Boku adapter, ensure you have:
+
+- Boku merchant account
+- API credentials (Merchant ID and Security Key)
+- Approved service configuration
+- Webhook endpoints configured
+
+### Basic Configuration
+
+```json
+{
+  "adapter": "boku",
+  "config": {
+    "merchantId": "your-merchant-id",
+    "securityKey": "your-security-key",
+    "environment": "production",
+    "serviceId": "your-service-id"
+  }
+}
+```
+
+## Integration Steps
+
+1. **Configure Credentials**: Set up your Boku API credentials
+2. **Initialize Adapter**: Create an instance of the Boku adapter
+3. **Implement Flows**: Add support for mobile payment flows
+4. **Set Up Webhooks**: Configure webhook handlers for notifications
+5. **Test Integration**: Test with test carriers in sandbox
+
+## Supported Countries
+
+Boku supports carrier billing in 65+ countries including:
+- United States
+- United Kingdom
+- Germany
+- Japan
+- South Korea
+- Brazil
+- And many more...
+
+## Security Considerations
+
+<Warning>
+Always validate phone numbers and implement fraud prevention measures. Store API credentials securely and never expose them in client-side code.
+</Warning>
+
+## Rate Limits
+
+Boku enforces the following rate limits:
+- **API Calls**: 60 requests per minute
+- **Bulk Operations**: 10 concurrent requests
+- **Webhook Deliveries**: 30 per second per endpoint
+
+<Note>
+Rate limits may vary based on your merchant agreement. Contact Boku support for higher limits.
+</Note>
+
+## Mobile-Specific Features
+
+- **SMS Verification**: Built-in phone number verification
+- **Carrier Detection**: Automatic carrier identification
+- **Multi-Currency**: Local currency support
+- **Regulatory Compliance**: Built-in compliance checks
+
+## Support
+
+For adapter-specific questions or issues:
+- Check the [API Specifications](/adapters/boku/api-specs)
+- Review [Common Issues](/adapters/boku/troubleshooting)
+- Contact our support team at support@yourcompany.com

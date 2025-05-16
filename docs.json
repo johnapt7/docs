@@ -1,35 +1,69 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Partner Adapters Documentation",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#0066CC",
+    "light": "#0080FF",
+    "dark": "#004499"
   },
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Overview",
         "groups": [
           {
-            "group": "Get Started",
+            "group": "Getting Started",
             "pages": [
               "index",
-              "quickstart",
-              "development"
+              "introduction",
+              "architecture"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Adapters",
+        "groups": [
+          {
+            "group": "Amazon Adapter",
+            "pages": [
+              "adapters/amazon/overview",
+              "adapters/amazon/flows",
+              "adapters/amazon/api-specs"
             ]
           },
           {
-            "group": "Essentials",
+            "group": "Boku Adapter",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
+              "adapters/boku/overview",
+              "adapters/boku/flows",
+              "adapters/boku/api-specs"
+            ]
+          },
+          {
+            "group": "Roku Adapter",
+            "pages": [
+              "adapters/roku/overview",
+              "adapters/roku/flows",
+              "adapters/roku/api-specs"
+            ]
+          },
+          {
+            "group": "iTunes Adapter",
+            "pages": [
+              "adapters/itunes/overview",
+              "adapters/itunes/flows",
+              "adapters/itunes/api-specs"
+            ]
+          },
+          {
+            "group": "Google Adapter",
+            "pages": [
+              "adapters/google/overview",
+              "adapters/google/flows",
+              "adapters/google/api-specs"
             ]
           }
         ]
@@ -38,18 +72,11 @@
         "tab": "API Reference",
         "groups": [
           {
-            "group": "API Documentation",
+            "group": "Common APIs",
             "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint Examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api-reference/authentication",
+              "api-reference/error-handling",
+              "api-reference/common-endpoints"
             ]
           }
         ]
@@ -58,19 +85,14 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "GitHub",
+          "href": "https://github.com/yourcompany/partner-adapters",
+          "icon": "github"
         },
         {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "Support",
+          "href": "mailto:support@yourcompany.com",
+          "icon": "envelope"
         }
       ]
     }
@@ -83,20 +105,19 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:support@yourcompany.com"
       }
     ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "href": "https://dashboard.yourcompany.com"
     }
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/yourcompany",
+      "linkedin": "https://linkedin.com/company/yourcompany"
     }
   }
 }

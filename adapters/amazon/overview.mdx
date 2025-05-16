@@ -1,0 +1,106 @@
+---
+title: Amazon Adapter Overview
+description: Learn about the Amazon payment adapter integration
+icon: amazon
+---
+
+# Amazon Adapter
+
+The Amazon Adapter provides seamless integration with Amazon's payment ecosystem, supporting various transaction types and subscription models.
+
+## Key Features
+
+- **Native Amazon Pay Integration**: Direct integration with Amazon Pay APIs
+- **Subscription Management**: Full support for recurring payments
+- **Multi-Currency Support**: Handle transactions in multiple currencies
+- **Real-time Webhooks**: Instant notifications for payment events
+
+## Supported Operations
+
+<CardGroup cols={2}>
+  <Card title="Purchase" icon="shopping-cart" href="/adapters/amazon/flows#purchase">
+    One-time and subscription purchases
+  </Card>
+  <Card title="Upgrade" icon="arrow-up" href="/adapters/amazon/flows#upgrade">
+    Subscription tier upgrades
+  </Card>
+  <Card title="Downgrade" icon="arrow-down" href="/adapters/amazon/flows#downgrade">
+    Subscription tier downgrades
+  </Card>
+  <Card title="Cancel" icon="xmark" href="/adapters/amazon/flows#cancel">
+    Subscription cancellations
+  </Card>
+</CardGroup>
+
+## Getting Started
+
+### Prerequisites
+
+Before integrating the Amazon adapter, ensure you have:
+
+- Amazon Seller account with payment processing enabled
+- API credentials (Client ID and Secret)
+- Webhook endpoints configured
+
+### Basic Configuration
+
+```json
+{
+  "adapter": "amazon",
+  "config": {
+    "clientId": "your-client-id",
+    "clientSecret": "your-client-secret",
+    "environment": "production",
+    "region": "us-east-1"
+  }
+}
+```
+
+## Integration Steps
+
+1. **Configure Credentials**: Set up your Amazon API credentials
+2. **Initialize Adapter**: Create an instance of the Amazon adapter
+3. **Implement Flows**: Add support for purchase, upgrade, downgrade, and cancel operations
+4. **Set Up Webhooks**: Configure webhook handlers for real-time updates
+5. **Test Integration**: Thoroughly test all flows in sandbox environment
+
+## Security Considerations
+
+<Warning>
+Always store sensitive credentials securely using environment variables or a secure vault service. Never commit credentials to version control.
+</Warning>
+
+## Rate Limits
+
+Amazon enforces the following rate limits:
+- **API Calls**: 100 requests per second
+- **Webhook Deliveries**: 50 per second
+- **Batch Operations**: 10 concurrent requests
+
+<Note>
+Rate limits may vary based on your Amazon seller tier. Contact Amazon support for higher limits.
+</Note>
+
+## Error Handling
+
+The Amazon adapter provides standardized error responses:
+
+```json
+{
+  "error": {
+    "code": "PAYMENT_DECLINED",
+    "message": "The payment method was declined",
+    "details": {
+      "reason": "insufficient_funds",
+      "amazonErrorCode": "DeclinedPaymentMethod"
+    }
+  }
+}
+```
+
+## Support
+
+For adapter-specific questions or issues:
+- Check the [API Specifications](/adapters/amazon/api-specs)
+- Review [Common Issues](/adapters/amazon/troubleshooting)
+- Contact our support team at support@yourcompany.com

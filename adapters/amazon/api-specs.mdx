@@ -1,0 +1,477 @@
+---
+title: Amazon Adapter API Specifications
+description: Complete API reference for the Amazon payment adapter
+icon: code
+---
+
+# Amazon Adapter API Reference
+
+Complete API documentation for the Amazon payment adapter.
+
+## Base Configuration
+
+### Initialization
+
+```javascript
+const AmazonAdapter = require('amazon-adapter');
+
+const adapter = new AmazonAdapter({
+  clientId: process.env.AMAZON_CLIENT_ID,
+  clientSecret: process.env.AMAZON_CLIENT_SECRET,
+  environment: 'production', // or 'sandbox'
+  region: 'us-east-1',
+  webhookSecret: process.env.AMAZON_WEBHOOK_SECRET
+});
+```
+
+## Authentication
+
+All API requests require authentication headers:
+
+```http
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+X-Api-Version: 2023-01
+```
+
+## Purchase Endpoints
+
+### Create Purchase
+
+<ResponseField name="POST" type="/api/amazon/purchases">
+  Create a new purchase or subscription
+</ResponseField>
+
+#### Request Body
+
+```json
+{
+  "amount": 29.99,
+  "currency": "USD",
+  "productId": "premium-monthly",
+  "customerId": "cust_123",
+  "description": "Premium Monthly Subscription",
+  "metadata": {
+    "orderId": "order_456",
+    "source": "web"
+  },
+  "returnUrl": "https://yourapp.com/purchase/complete",
+  "cancelUrl": "https://yourapp.com/purchase/cancel"
+}
+```
+
+#### Response
+
+```json
+{
+  "success": true,
+  "purchaseId": "pur_789",
+  "checkoutUrl": "https://pay.amazon.com/checkout/session-123",
+  "sessionId": "amzn-session-123",
+  "expiresAt": "2024-01-15T10:30:00Z"
+}
+```
+
+### Get Purchase Status
+
+<ResponseField name="GET" type="/api/amazon/purchases/:purchaseId">
+  Retrieve the status of a purchase
+</ResponseField>
+
+#### Response
+
+```json
+{
+  "purchaseId": "pur_789",
+  "status": "completed",
+  "amount": 29.99,
+  "currency": "USD",
+  "customerId": "cust_123",
+  "productId": "premium-monthly",
+  "completedAt": "2024-01-15T10:15:00Z",
+  "subscriptionId": "sub_101"
+}
+```
+
+## Subscription Endpoints
+
+### Upgrade Subscription
+
+<ResponseField name="POST" type="/api/amazon/subscriptions/:subscriptionId/upgrade">
+  Upgrade an existing subscription to a higher tier
+</ResponseField>
+
+#### Request Body
+
+```json
+{
+  "newPlanId": "enterprise-monthly",
+  "effectiveDate": "immediate",
+  "prorate": true,
+  "preserveTrialDays": false
+}
+```
+
+#### Response
+
+```json
+{
+  "success": true,
+  "subscriptionId": "sub_101",
+  "previousPlan": "premium-monthly",
+  "newPlan": "enterprise-monthly",
+  "effectiveDate": "2024-01-15T10:30:00Z",
+  "proratedAmount": 15.00,
+  "nextBillingDate": "2024-02-15T00:00:00Z",
+  "nextBillingAmount": 99.99
+}
+```
+
+### Downgrade Subscription
+
+<ResponseField name="POST" type="/api/amazon/subscriptions/:subscriptionId/downgrade">
+  Downgrade a subscription to a lower tier
+</ResponseField>
+
+#### Request Body
+
+```json
+{
+  "newPlanId": "basic-monthly",
+  "reason": "cost_reduction",
+  "feedback": "Too expensive for current needs"
+}
+```
+
+#### Response
+
+```json
+{
+  "success": true,
+  "subscriptionId": "sub_101",
+  "previousPlan": "premium-monthly",
+  "newPlan": "basic-monthly",
+  "effectiveDate": "2024-02-15T00:00:00Z",
+  "retainAccessUntil": "2024-02-15T00:00:00Z"
+}
+```
+
+### Cancel Subscription
+
+<ResponseField name="POST" type="/api/amazon/subscriptions/:subscriptionId/cancel">
+  Cancel an active subscription
+</ResponseField>
+
+#### Request Body
+
+```json
+{
+  "when": "end_of_period",
+  "reason": "not_using_service",
+  "feedback": "Optional customer feedback",
+  "surveyResponses": {
+    "would_recommend": false,
+    "satisfaction": 3
+  }
+}
+```
+
+#### Response
+
+```json
+{
+  "success": true,
+  "subscriptionId": "sub_101",
+  "status": "cancelled",
+  "cancelledAt": "2024-01-15T10:45:00Z",
+  "endsAt": "2024-02-15T00:00:00Z",
+  "canReactivate": true,
+  "refundAmount": 0
+}
+```
+
+### Get Subscription
+
+<ResponseField name="GET" type="/api/amazon/subscriptions/:subscriptionId">
+  Retrieve subscription details
+</ResponseField>
+
+#### Response
+
+```json
+{
+  "subscriptionId": "sub_101",
+  "status": "active",
+  "planId": "premium-monthly",
+  "customerId": "cust_123",
+  "currentPeriodStart": "2024-01-15T00:00:00Z",
+  "currentPeriodEnd": "2024-02-15T00:00:00Z",
+  "cancelAtPeriodEnd": false,
+  "amount": 29.99,
+  "currency": "USD",
+  "metadata": {
+    "source": "web",
+    "campaign": "new_year_2024"
+  }
+}
+```
+
+## Webhook Events
+
+### Event Types
+
+The Amazon adapter sends the following webhook events:
+
+<AccordionGroup>
+  <Accordion title="payment.completed">
+    ```json
+    {
+      "id": "evt_123",
+      "type": "payment.completed",
+      "created": "2024-01-15T10:15:00Z",
+      "data": {
+        "purchaseId": "pur_789",
+        "amount": 29.99,
+        "currency": "USD",
+        "customerId": "cust_123",
+        "subscriptionId": "sub_101"
+      }
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="subscription.created">
+    ```json
+    {
+      "id": "evt_124",
+      "type": "subscription.created",
+      "created": "2024-01-15T10:16:00Z",
+      "data": {
+        "subscriptionId": "sub_101",
+        "planId": "premium-monthly",
+        "customerId": "cust_123",
+        "startsAt": "2024-01-15T00:00:00Z"
+      }
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="subscription.updated">
+    ```json
+    {
+      "id": "evt_125",
+      "type": "subscription.updated",
+      "created": "2024-01-15T10:30:00Z",
+      "data": {
+        "subscriptionId": "sub_101",
+        "previousPlan": "premium-monthly",
+        "newPlan": "enterprise-monthly",
+        "effectiveDate": "2024-01-15T10:30:00Z"
+      }
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="subscription.cancelled">
+    ```json
+    {
+      "id": "evt_126",
+      "type": "subscription.cancelled",
+      "created": "2024-01-15T10:45:00Z",
+      "data": {
+        "subscriptionId": "sub_101",
+        "cancelledAt": "2024-01-15T10:45:00Z",
+        "endsAt": "2024-02-15T00:00:00Z",
+        "reason": "customer_request"
+      }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Webhook Security
+
+Verify webhook authenticity using the signature:
+
+```javascript
+const crypto = require('crypto');
+
+function verifyWebhookSignature(payload, signature, secret) {
+  const expectedSignature = crypto
+    .createHmac('sha256', secret)
+    .update(payload)
+    .digest('hex');
+    
+  return expectedSignature === signature;
+}
+
+// In your webhook handler
+app.post('/webhooks/amazon', (req, res) => {
+  const signature = req.headers['x-amazon-signature'];
+  const isValid = verifyWebhookSignature(
+    JSON.stringify(req.body),
+    signature,
+    process.env.AMAZON_WEBHOOK_SECRET
+  );
+  
+  if (!isValid) {
+    return res.status(401).send('Invalid signature');
+  }
+  
+  // Process webhook...
+});
+```
+
+## Error Codes
+
+Standard error responses from the Amazon adapter:
+
+| Code | Description | HTTP Status |
+|------|-------------|-------------|
+| `invalid_request` | Invalid request parameters | 400 |
+| `authentication_failed` | Invalid API credentials | 401 |
+| `authorization_failed` | Insufficient permissions | 403 |
+| `resource_not_found` | Requested resource not found | 404 |
+| `payment_declined` | Payment method declined | 402 |
+| `subscription_invalid` | Invalid subscription state | 409 |
+| `rate_limit_exceeded` | Too many requests | 429 |
+| `internal_error` | Server error | 500 |
+
+### Error Response Format
+
+```json
+{
+  "error": {
+    "code": "payment_declined",
+    "message": "The payment method was declined",
+    "details": {
+      "reason": "insufficient_funds",
+      "amazonErrorCode": "DeclinedPaymentMethod",
+      "declineCode": "card_declined"
+    }
+  },
+  "requestId": "req_xyz789"
+}
+```
+
+## Rate Limits
+
+| Endpoint Type | Limit | Window |
+|---------------|-------|--------|
+| Purchase Creation | 100 | per second |
+| Subscription Operations | 50 | per second |
+| Status Queries | 200 | per second |
+| Webhook Deliveries | 50 | per second |
+
+## SDK Examples
+
+<CodeGroup>
+
+```javascript Node.js
+// Initialize adapter
+const adapter = new AmazonAdapter(config);
+
+// Create a purchase
+try {
+  const purchase = await adapter.purchases.create({
+    amount: 29.99,
+    currency: 'USD',
+    productId: 'premium-monthly',
+    customerId: 'cust_123'
+  });
+  
+  console.log('Checkout URL:', purchase.checkoutUrl);
+} catch (error) {
+  console.error('Error:', error.message);
+}
+
+// Handle webhook
+adapter.webhooks.on('payment.completed', async (event) => {
+  console.log('Payment completed:', event.data.purchaseId);
+});
+```
+
+```python Python
+# Initialize adapter
+adapter = AmazonAdapter(config)
+
+# Create a purchase
+try:
+    purchase = adapter.purchases.create(
+        amount=29.99,
+        currency='USD',
+        product_id='premium-monthly',
+        customer_id='cust_123'
+    )
+    
+    print(f'Checkout URL: {purchase.checkout_url}')
+except AmazonError as e:
+    print(f'Error: {e.message}')
+
+# Handle webhook
+@adapter.webhook('payment.completed')
+def handle_payment_completed(event):
+    print(f'Payment completed: {event.data.purchase_id}')
+```
+
+```java Java
+// Initialize adapter
+AmazonAdapter adapter = new AmazonAdapter(config);
+
+// Create a purchase
+try {
+    Purchase purchase = adapter.purchases().create(
+        new PurchaseRequest()
+            .amount(29.99)
+            .currency("USD")
+            .productId("premium-monthly")
+            .customerId("cust_123")
+    );
+    
+    System.out.println("Checkout URL: " + purchase.getCheckoutUrl());
+} catch (AmazonException e) {
+    System.err.println("Error: " + e.getMessage());
+}
+
+// Handle webhook
+adapter.webhooks().on("payment.completed", event -> {
+    System.out.println("Payment completed: " + event.getData().getPurchaseId());
+});
+```
+
+</CodeGroup>
+
+## Testing
+
+Use the sandbox environment for testing:
+
+```javascript
+const adapter = new AmazonAdapter({
+  ...config,
+  environment: 'sandbox'
+});
+
+// Test card numbers
+const testCards = {
+  success: '4111111111111111',
+  declined: '4000000000000002',
+  insufficientFunds: '4000000000000019'
+};
+```
+
+## Changelog
+
+### Version 2.1.0 (2024-01-15)
+- Added support for subscription pausing
+- Improved error handling for network timeouts
+- Added batch operations for efficiency
+
+### Version 2.0.0 (2023-12-01)
+- Complete API redesign
+- Added TypeScript support
+- Enhanced webhook security
+
+### Version 1.5.0 (2023-10-15)
+- Added multi-currency support
+- Improved retry logic
+- Bug fixes in proration calculations

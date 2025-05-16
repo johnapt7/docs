@@ -1,0 +1,156 @@
+---
+title: Introduction
+description: Getting started with Partner Adapters
+icon: hand-wave
+---
+
+# Introduction to Partner Adapters
+
+Partner Adapters provide a unified interface for integrating with various payment providers, making it easy to support multiple payment methods and platforms in your application.
+
+## What are Partner Adapters?
+
+Partner Adapters are pre-built integration modules that standardize the way your application interacts with different payment providers. Each adapter handles the specific requirements and APIs of its respective partner while exposing a consistent interface to your application.
+
+## Why Use Partner Adapters?
+
+<CardGroup cols={2}>
+  <Card title="Unified Interface" icon="layer-group">
+    Single API to interact with multiple payment providers
+  </Card>
+  <Card title="Reduced Complexity" icon="puzzle-piece">
+    No need to learn each provider's specific API
+  </Card>
+  <Card title="Faster Integration" icon="rocket">
+    Pre-built flows for common operations
+  </Card>
+  <Card title="Maintained & Updated" icon="sync">
+    Regular updates to support API changes
+  </Card>
+</CardGroup>
+
+## Supported Partners
+
+We currently support the following payment partners:
+
+- **Amazon**: Amazon Pay and subscription management
+- **Boku**: Mobile carrier billing and direct payments
+- **Roku**: Streaming platform payments and subscriptions
+- **iTunes**: Apple App Store payments and in-app purchases
+- **Google**: Google Play billing and subscriptions
+
+## Core Concepts
+
+### Adapters
+
+Each adapter is a self-contained module that:
+- Handles authentication with the partner
+- Implements standard operations (purchase, upgrade, downgrade, cancel)
+- Manages webhooks and notifications
+- Provides error handling and retry logic
+
+### Flows
+
+All adapters support four core transaction flows:
+
+1. **Purchase**: Create new transactions or subscriptions
+2. **Upgrade**: Move customers to higher-tier plans
+3. **Downgrade**: Move customers to lower-tier plans
+4. **Cancel**: End subscriptions or refund transactions
+
+### Configuration
+
+Adapters use a standard configuration format:
+
+```json
+{
+  "adapter": "partner-name",
+  "config": {
+    "clientId": "your-client-id",
+    "clientSecret": "your-client-secret",
+    "environment": "production",
+    "webhookUrl": "https://yourapp.com/webhooks"
+  }
+}
+```
+
+## Quick Start
+
+<Steps>
+  <Step title="Choose Your Adapter">
+    Select the payment partner you want to integrate
+  </Step>
+  <Step title="Configure Credentials">
+    Set up API credentials from your partner dashboard
+  </Step>
+  <Step title="Initialize Adapter">
+    Create an instance with your configuration
+  </Step>
+  <Step title="Implement Flows">
+    Add support for the transaction types you need
+  </Step>
+  <Step title="Handle Webhooks">
+    Set up endpoints to receive real-time updates
+  </Step>
+  <Step title="Test & Deploy">
+    Test in sandbox, then deploy to production
+  </Step>
+</Steps>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Security First">
+    - Store credentials securely using environment variables
+    - Implement webhook signature verification
+    - Use HTTPS for all communications
+    - Regularly rotate API keys
+  </Accordion>
+  <Accordion title="Error Handling">
+    - Implement comprehensive error catching
+    - Use exponential backoff for retries
+    - Log all transactions for debugging
+    - Provide clear error messages to users
+  </Accordion>
+  <Accordion title="Testing">
+    - Use sandbox environments for development
+    - Test all edge cases and error scenarios
+    - Implement automated tests for critical flows
+    - Monitor production transactions closely
+  </Accordion>
+  <Accordion title="Monitoring">
+    - Set up alerts for failed transactions
+    - Monitor API rate limits
+    - Track conversion rates by flow
+    - Review webhook delivery success rates
+  </Accordion>
+</AccordionGroup>
+
+## Getting Help
+
+<CardGroup cols={2}>
+  <Card title="Documentation" icon="book" href="/adapters/amazon/overview">
+    Browse adapter-specific guides
+  </Card>
+  <Card title="API Reference" icon="code" href="/api-reference/authentication">
+    Detailed API documentation
+  </Card>
+  <Card title="Support" icon="headset" href="mailto:support@yourcompany.com">
+    Contact our support team
+  </Card>
+  <Card title="GitHub" icon="github" href="https://github.com/yourcompany/partner-adapters">
+    View source and contribute
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+Ready to get started? Choose your adapter:
+
+- [Amazon Adapter →](/adapters/amazon/overview)
+- [Boku Adapter →](/adapters/boku/overview)
+- [Roku Adapter →](/adapters/roku/overview)
+- [iTunes Adapter →](/adapters/itunes/overview)
+- [Google Adapter →](/adapters/google/overview)
+
+Or learn more about the [system architecture →](/architecture)
